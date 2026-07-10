@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PTSTI — Motor Vehicle Mechanic Trade Course</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:#F7F4EF;color:#1A1A1A;min-height:100vh;}
+h1,h2,h3,h4,h5{font-family:'Barlow Condensed',sans-serif;letter-spacing:.03em;}
+.app-wrap{display:flex;min-height:100vh;}
+.sidebar{width:235px;min-width:235px;background:#1C1A17;display:flex;flex-direction:column;padding:24px 16px;gap:4px;position:sticky;top:0;height:100vh;overflow-y:auto;}
+.sidebar-logo{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;color:#fff;letter-spacing:.04em;padding:0 8px 20px;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:12px;line-height:1.3;}
+.logo-sub{font-size:11px;font-weight:400;color:rgba(255,255,255,.35);letter-spacing:.08em;text-transform:uppercase;margin-top:3px;}
+.nav-btn{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;border:none;background:transparent;color:rgba(255,255,255,.55);font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;width:100%;text-align:left;transition:all .15s;}
+.nav-btn:hover{background:rgba(255,255,255,.08);color:#fff;}
+.nav-btn.active{background:#E07B39;color:#fff;}
+.nav-ico{font-size:16px;width:20px;text-align:center;}
+.nav-badge{margin-left:auto;font-size:11px;padding:2px 7px;border-radius:99px;font-weight:600;}
+.badge-paid{background:#1E6E3F;color:#fff;}
+.badge-pending{background:#E07B39;color:#fff;}
+.nav-section{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:.1em;color:rgba(255,255,255,.3);padding:12px 12px 4px;text-transform:uppercase;}
+.nav-mod{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:6px;border:none;background:transparent;color:rgba(255,255,255,.45);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;width:100%;text-align:left;transition:all .15s;}
+.nav-mod:hover{color:rgba(255,255,255,.85);}
+.nav-mod.done{color:#6DCFA0;}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);flex-shrink:0;}
+.nav-mod.done .dot{background:#6DCFA0;}
+.progress-mini{margin-top:auto;padding:16px 12px;border-top:1px solid rgba(255,255,255,.1);}
+.prog-label{font-size:12px;color:rgba(255,255,255,.4);margin-bottom:6px;}
+.prog-bar-wrap{height:4px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;}
+.prog-bar-fill{height:100%;background:#E07B39;border-radius:99px;transition:width .4s;}
+.main{flex:1;padding:32px 36px;max-width:900px;overflow-y:auto;}
+.page-title{font-size:38px;font-weight:800;margin-bottom:4px;}
+.page-sub{font-size:14px;color:#7A7469;margin-bottom:28px;}
+.card{background:#fff;border:1.5px solid #E8E3DA;border-radius:12px;padding:22px 24px;}
+.card+.card{margin-top:16px;}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:3px 10px;border-radius:99px;font-family:'Barlow Condensed',sans-serif;letter-spacing:.04em;}
+.tag-orange{background:#FEF0E7;color:#C45A15;}
+.tag-green{background:#E4F5EC;color:#1E6E3F;}
+.tag-gray{background:#F0EDE8;color:#7A7469;}
+.tag-red{background:#FDECEA;color:#B22222;}
+.tag-blue{background:#E6F1FB;color:#185FA5;}
+.btn{border:none;border-radius:8px;padding:11px 24px;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;letter-spacing:.05em;cursor:pointer;transition:all .15s;}
+.btn-orange{background:#E07B39;color:#fff;}
+.btn-orange:hover{background:#C96B2D;}
+.btn-ghost{background:#F0EDE8;color:#1C1A17;}
+.btn-ghost:hover{background:#E8E3DA;}
+.btn-green{background:#1E6E3F;color:#fff;}
+.btn-green:hover{background:#165A33;}
+.btn-blue{background:#185FA5;color:#fff;}
+.btn-blue:hover{background:#0C447C;}
+.btn-sm{padding:7px 16px;font-size:15px;}
+.btn:disabled{opacity:.45;cursor:not-allowed;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.stat-card{background:#F7F4EF;border-radius:10px;padding:16px;text-align:center;}
+.stat-num{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:800;color:#E07B39;}
+.stat-lbl{font-size:12px;color:#7A7469;margin-top:2px;}
+.progress-bar{height:8px;background:#E8E3DA;border-radius:99px;overflow:hidden;margin:8px 0;}
+.progress-fill{height:100%;background:#E07B39;border-radius:99px;transition:width .5s;}
+.progress-fill.green{background:#1E6E3F;}
+.mod-card{background:#fff;border:1.5px solid #E8E3DA;border-radius:12px;padding:20px;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:16px;margin-bottom:12px;}
+.mod-card:hover{border-color:#E07B39;transform:translateY(-2px);box-shadow:0 6px 24px rgba(224,123,57,.1);}
+.mod-card.done{border-color:#1E6E3F;}
+.mod-card.locked{opacity:.6;cursor:default;}
+.mod-card.locked:hover{transform:none;box-shadow:none;border-color:#E8E3DA;}
+.mod-ico{width:48px;height:48px;border-radius:10px;background:#F7F4EF;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.mod-card.done .mod-ico{background:#E4F5EC;}
+.alert{border-radius:8px;padding:14px 16px;font-size:14px;margin-bottom:16px;line-height:1.65;}
+.alert-green{background:#E4F5EC;color:#1E6E3F;border-left:3px solid #1E6E3F;}
+.alert-red{background:#FDECEA;color:#C0392B;border-left:3px solid #C0392B;}
+.alert-orange{background:#FEF0E7;color:#C45A15;border-left:3px solid #E07B39;}
+.alert-blue{background:#E6F1FB;color:#185FA5;border-left:3px solid #185FA5;}
+.tab-bar{display:flex;border-bottom:1.5px solid #E8E3DA;margin-bottom:24px;}
+.tab{padding:10px 20px;border:none;background:transparent;font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:600;letter-spacing:.04em;cursor:pointer;color:#7A7469;border-bottom:2.5px solid transparent;margin-bottom:-1.5px;transition:all .15s;}
+.tab.active{color:#E07B39;border-bottom-color:#E07B39;}
+.video-wrap{border-radius:10px;overflow:hidden;background:#000;aspect-ratio:16/9;margin-bottom:20px;}
+.video-wrap iframe{width:100%;height:100%;border:none;}
+.lesson-content{background:#F7F4EF;border-radius:10px;padding:20px 24px;font-size:15px;line-height:1.8;color:#2C2A26;}
+.quiz-opt{width:100%;border:1.5px solid #E8E3DA;border-radius:8px;padding:13px 16px;background:#fff;text-align:left;font-family:'DM Sans',sans-serif;font-size:15px;cursor:pointer;transition:all .15s;margin-bottom:10px;display:flex;align-items:center;gap:12px;}
+.quiz-opt:hover{border-color:#E07B39;background:#FEF9F5;}
+.quiz-opt.sel{border-color:#E07B39;background:#FEF0E7;font-weight:500;}
+.quiz-opt.correct{border-color:#1E6E3F;background:#E4F5EC;color:#1E6E3F;}
+.quiz-opt.wrong{border-color:#C0392B;background:#FDECEA;color:#C0392B;}
+.opt-letter{width:26px;height:26px;border-radius:6px;background:#F0EDE8;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;flex-shrink:0;}
+.quiz-opt.sel .opt-letter{background:#E07B39;color:#fff;}
+.quiz-opt.correct .opt-letter{background:#1E6E3F;color:#fff;}
+.quiz-opt.wrong .opt-letter{background:#C0392B;color:#fff;}
+.chat-wrap{display:flex;flex-direction:column;height:520px;}
+.chat-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#F7F4EF;border-radius:10px;border:1.5px solid #E8E3DA;}
+.msg-ai,.msg-user{display:flex;flex-direction:column;max-width:78%;}
+.msg-user{align-self:flex-end;align-items:flex-end;}
+.msg-ai{align-self:flex-start;}
+.bubble-ai{background:#fff;border:1.5px solid #E8E3DA;border-radius:12px 12px 12px 4px;padding:12px 15px;font-size:14.5px;line-height:1.65;white-space:pre-wrap;}
+.bubble-user{background:#E07B39;color:#fff;border-radius:12px 12px 4px 12px;padding:12px 15px;font-size:14.5px;line-height:1.65;white-space:pre-wrap;}
+.chat-input-row{display:flex;gap:10px;margin-top:12px;}
+.chat-input{flex:1;border:1.5px solid #E8E3DA;border-radius:8px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:14px;background:#fff;outline:none;transition:border .15s;}
+.chat-input:focus{border-color:#E07B39;}
+.typing{display:flex;gap:5px;align-items:center;padding:4px 0;}
+.typing span{width:7px;height:7px;border-radius:50%;background:#C0B9AE;animation:bounce .9s infinite;}
+.typing span:nth-child(2){animation-delay:.15s;}
+.typing span:nth-child(3){animation-delay:.3s;}
+@keyframes bounce{0%,80%,100%{transform:translateY(0);}40%{transform:translateY(-7px);}}
+.pay-method-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px;}
+.pay-method-btn{border:2px solid #E8E3DA;border-radius:12px;padding:22px 16px;background:#fff;cursor:pointer;transition:all .2s;text-align:center;}
+.pay-method-btn:hover{border-color:#E07B39;}
+.pay-method-btn.sel{border-color:#E07B39;background:#FEF9F5;}
+.pico{font-size:34px;margin-bottom:8px;}
+.ptitle{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;}
+.psub{font-size:12px;color:#7A7469;margin-top:4px;}
+.bank-box{background:#F7F4EF;border:1.5px solid #E8E3DA;border-radius:10px;padding:18px 20px;margin-bottom:18px;}
+.bank-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #E8E3DA;font-size:14px;}
+.bank-row:last-child{border-bottom:none;}
+.bl{color:#7A7469;}
+.bv{font-weight:600;color:#1C1A17;}
+.card-visual{background:linear-gradient(135deg,#1C1A17,#3A3530);border-radius:14px;padding:22px 24px;color:#fff;margin-bottom:20px;position:relative;overflow:hidden;}
+.card-visual::before{content:'';position:absolute;top:-30px;right:-30px;width:130px;height:130px;border-radius:50%;background:rgba(224,123,57,.15);}
+.card-chip{width:36px;height:28px;border-radius:5px;background:linear-gradient(135deg,#D4A843,#B8892C);margin-bottom:16px;}
+.card-num{font-family:'Barlow Condensed',sans-serif;font-size:22px;letter-spacing:.2em;margin-bottom:12px;}
+.card-meta{display:flex;justify-content:space-between;font-size:12px;opacity:.7;}
+.fi{width:100%;border:1.5px solid #E8E3DA;border-radius:8px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:15px;outline:none;transition:border .15s;background:#fff;color:#1A1A1A;margin-bottom:14px;}
+.fi:focus{border-color:#E07B39;}
+.fi-label{font-size:13px;color:#7A7469;margin-bottom:5px;display:block;}
+.upload-area{border:2px dashed #C8C2B8;border-radius:10px;padding:28px;text-align:center;cursor:pointer;transition:all .2s;background:#fff;position:relative;margin-bottom:16px;}
+.upload-area:hover{border-color:#E07B39;background:#FEF9F5;}
+.upload-area.has-file{border-color:#1E6E3F;background:#E4F5EC;}
+.upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.cert-wrap{background:#fff;border:3px solid #E07B39;border-radius:16px;padding:48px 40px;text-align:center;max-width:700px;margin:0 auto;position:relative;}
+.cert-inner{position:absolute;inset:10px;border:1px solid #E8E3DA;border-radius:12px;pointer-events:none;}
+.cert-seal{width:64px;height:64px;border-radius:50%;background:#E07B39;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:28px;}
+.cert-heading{font-size:44px;font-weight:800;color:#1C1A17;margin-bottom:16px;line-height:1.1;}
+.cert-name{font-size:34px;font-weight:700;color:#E07B39;border-bottom:2px solid #E07B39;display:inline-block;padding-bottom:4px;margin:6px 0 18px;}
+.cert-body{font-size:15px;color:#4A4540;line-height:1.75;margin-bottom:24px;white-space:pre-wrap;}
+.sig-line{border-top:1.5px solid #1C1A17;width:200px;margin:0 auto 6px;padding-top:8px;font-size:16px;font-weight:700;letter-spacing:.04em;}
+.sig-sub{font-size:12px;color:#7A7469;}
+.name-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#F7F4EF;padding:24px;}
+.name-card{background:#fff;border:1.5px solid #E8E3DA;border-radius:16px;padding:48px 40px;max-width:480px;width:100%;text-align:center;}
+.back-btn{background:none;border:none;color:#7A7469;font-size:14px;cursor:pointer;margin-bottom:16px;display:flex;align-items:center;gap:5px;font-family:'DM Sans',sans-serif;}
+.back-btn:hover{color:#1A1A1A;}
+@media print{
+  .sidebar,.back-btn,.tab-bar,.btn,.chat-input-row{display:none!important;}
+  .app-wrap{display:block;}
+  .main{padding:0;}
+  .cert-wrap{border:3px solid #E07B39!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+}
+@media(max-width:700px){
+  .app-wrap{flex-direction:column;}
+  .sidebar{width:100%;height:auto;position:relative;flex-direction:row;flex-wrap:wrap;padding:16px;}
+  .main{padding:20px;}
+  .grid2,.pay-method-row{grid-template-columns:1fr;}
+  .cert-wrap{padding:28px 20px;}
+  .cert-heading{font-size:30px;}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script>
+const {useState,useRef,useEffect,createElement:h,Fragment}=React;
+
+const INSTITUTE="Pacific Technical Skills Training Institute";
+const SHORT="PTSTI";
+const CERT_FEE="K 85.00";
+const BANK={name:"Bank South Pacific (BSP)",acct:"1000-2345-6789",branch:"Waigani Branch, Port Moresby",bsb:"088-001",ref:"PTSTI-CERT-2026"};
+const LETTERS=["A","B","C","D"];
+
+const MODULES=[
+  {id:1,title:"Engine Fundamentals",ico:"⚙️",dur:"45 min",desc:"The 4-stroke cycle, engine components, lubrication and basic diagnosis.",vid:"HsG_u6rMsT4",
+  content:`The internal combustion engine is the heart of every vehicle. In PNG's diverse terrain — from highland roads to coastal highways — engine knowledge is essential for every mechanic.
+
+THE 4-STROKE CYCLE
+1. Intake — Piston moves down, drawing in air-fuel mixture
+2. Compression — Piston moves up, compressing the mixture
+3. Power — Spark ignites mixture, pushing piston down
+4. Exhaust — Piston moves up, expelling burnt gases
+
+KEY ENGINE COMPONENTS
+• Cylinder Block & Head — The engine's main structure
+• Pistons & Connecting Rods — Transfer combustion force
+• Crankshaft — Converts linear to rotational motion
+• Camshaft — Controls valve timing
+• Lubrication System — Reduces friction with engine oil
+
+PNG CONDITIONS
+Hot, humid climate accelerates oil degradation. Change oil every 5,000 km or per manufacturer schedule. Overheating is the #1 engine killer on PNG roads — always check coolant level.`,
+  quiz:[{q:"How many strokes complete one full engine cycle?",opts:["2","3","4","6"],ans:2},{q:"During the compression stroke, what happens?",opts:["Piston moves down drawing air in","Piston moves up compressing the mixture","The spark plug fires","Exhaust gases exit the cylinder"],ans:1},{q:"Which component converts linear piston motion to rotation?",opts:["Camshaft","Flywheel","Crankshaft","Valve stem"],ans:2},{q:"What is the lubrication system's main purpose?",opts:["Cool the engine with water","Reduce friction between moving parts","Supply fuel to cylinders","Remove exhaust gases"],ans:1},{q:"PNG's hot climate most commonly causes which engine problem?",opts:["Engine freezing","Overheating","Low fuel pressure","Excessive oil pressure"],ans:1}]},
+  {id:2,title:"Fuel Systems",ico:"⛽",dur:"50 min",desc:"Carburettors, fuel injection, fuel pumps and diagnosing fuel problems.",vid:"toVfvRhWbj8",
+  content:`Fuel systems deliver the correct air-fuel mixture to the engine. PNG vehicles range from older carburettor models to modern fuel-injected systems.
+
+CARBURETTOR SYSTEMS
+• Float chamber regulates fuel level
+• Venturi creates vacuum to draw fuel
+• Jets control fuel flow rate
+• Common on older Land Cruisers, PMVs and utilities
+
+FUEL INJECTION SYSTEMS
+• ECU (Electronic Control Unit) manages injection timing
+• Fuel injectors spray atomised fuel directly
+• O2 sensors provide closed-loop feedback
+• More efficient and cleaner combustion
+
+FUEL PUMPS
+• Mechanical pumps on older engines
+• Electric in-tank pumps on modern vehicles
+
+PNG-SPECIFIC ISSUES
+• Contaminated fuel — water and sediment from poor storage
+• Blocked fuel filters from dusty gravel roads
+• Vapour lock in extreme highland/coastal heat`,
+  quiz:[{q:"What does ECU stand for?",opts:["Engine Control Unit","Electronic Control Unit","Exhaust Control Unit","Energy Control Unit"],ans:1},{q:"Where is a modern electric fuel pump located?",opts:["On the engine block","In the fuel tank","On the firewall","Near the battery"],ans:1},{q:"What causes vapour lock in fuel lines?",opts:["Cold temperatures","Excessive heat vaporising fuel in lines","A blocked air filter","Low oil pressure"],ans:1},{q:"Which part of a carburettor regulates the fuel level?",opts:["Main jet","Venturi tube","Float chamber","Throttle body"],ans:2},{q:"A common fuel contamination issue on PNG dirt roads is:",opts:["Petrol dilution","Water and sediment in the fuel","Oil mixing with petrol","Excess fuel pressure"],ans:1}]},
+  {id:3,title:"Electrical Systems",ico:"⚡",dur:"55 min",desc:"Battery, alternator, starter motor, wiring and fault diagnosis.",vid:"J9XT4BfyDd0",
+  content:`Vehicle electrical systems power everything from engine starting to safety systems. PNG's humidity and rough terrain cause frequent electrical faults.
+
+BATTERY
+• Stores electrical energy (12V DC)
+• Rated in CCA (Cold Cranking Amps) and Amp Hours (Ah)
+• Maintenance: clean terminals, check electrolyte level
+
+ALTERNATOR
+• Charges the battery while the engine runs
+• Healthy output: 13.8–14.4 volts
+• Converts AC to DC via an internal rectifier
+
+STARTER MOTOR
+• Cranks the engine to start (draws 100–200 amps)
+• Solenoid engages the pinion gear to the flywheel ring gear
+
+WIRING & PROTECTION
+• Fuses protect circuits from overload
+• Relays switch high-current devices
+• Earth/ground connections are critical
+
+PNG TIPS
+• Corroded terminals from humidity — clean with bicarbonate soda
+• Check wiring for rodent damage (common in rural PNG)
+• Test with a multimeter — every PNG mechanic must have one`,
+  quiz:[{q:"What voltage should a healthy alternator produce?",opts:["9–10V","11–12V","13.8–14.4V","15–16V"],ans:2},{q:"What does CCA mean on a battery label?",opts:["Current Charge Amps","Cold Cranking Amps","Circuit Control Amps","Constant Current Amps"],ans:1},{q:"What is the purpose of a relay?",opts:["Store electrical energy","Protect circuits from overload","Switch high-current devices","Convert AC to DC"],ans:2},{q:"In PNG's humid climate, the most common battery problem is:",opts:["Frozen electrolyte","Corroded terminals","Overcharging","Very low CCA"],ans:1},{q:"Which tool is used to test alternator output voltage?",opts:["Timing light","Multimeter","Compression tester","Vacuum gauge"],ans:1}]},
+  {id:4,title:"Brakes & Suspension",ico:"🔩",dur:"60 min",desc:"Disc and drum brakes, suspension types, steering and wheel alignment.",vid:"e-OyXUl7Y0g",
+  content:`Brakes and suspension are critical safety systems. PNG's roads — potholes, gravel tracks, river crossings — put extreme demands on these components.
+
+DISC BRAKES
+• Caliper clamps pads against a rotor
+• Excellent heat dissipation for highland mountain roads
+• Always check minimum rotor thickness (stamped on rotor)
+
+DRUM BRAKES
+• Wheel cylinder pushes shoes against the drum
+• Common on rear axles of trucks and utilities
+• Self-adjusters maintain correct shoe clearance
+
+BRAKE FLUID
+• Hydraulic fluid transmits braking force
+• Hygroscopic — absorbs moisture, must be flushed every 2 years
+• Use correct grade: DOT 3 or DOT 4
+
+SUSPENSION
+• Solid Axle (Live Axle): robust, common on PNG 4WDs
+• Independent Suspension: smoother ride on cars
+• Leaf springs, coil springs, shock absorbers
+
+STEERING
+• Rack & Pinion: precise, common on cars
+• Recirculating Ball: robust, used on trucks & 4WDs
+• Check power steering fluid and pump belt regularly`,
+  quiz:[{q:"What fluid transmits force in hydraulic brake systems?",opts:["Engine oil","Transmission fluid","Brake fluid","Power steering fluid"],ans:2},{q:"Why replace brake fluid every 2 years?",opts:["It runs out through use","It absorbs moisture over time","It becomes too thick to flow","It changes colour and fades"],ans:1},{q:"Which brake type uses a caliper and rotor?",opts:["Drum brake","Disc brake","Band brake","Wedge brake"],ans:1},{q:"What suspension type is most common on PNG 4WD vehicles?",opts:["MacPherson strut","Double wishbone","Solid / live axle","Air suspension"],ans:2},{q:"What is the function of a shock absorber?",opts:["Support the vehicle weight","Steer the vehicle","Dampen spring oscillations","Adjust wheel alignment"],ans:2}]},
+  {id:5,title:"Transmission & Drivetrain",ico:"🏎️",dur:"55 min",desc:"Manual and automatic gearboxes, differentials, 4WD systems and driveshafts.",vid:"wCu9W9xNwtI",
+  content:`The drivetrain transfers engine power to the wheels. Understanding these systems is vital in PNG where 4WD vehicles dominate highland and remote area driving.
+
+MANUAL TRANSMISSION
+• Clutch disconnects engine from gearbox for gear changes
+• Synchromesh allows smooth gear changes
+• Clutch components: pressure plate, friction disc, release bearing
+
+AUTOMATIC TRANSMISSION
+• Planetary gear sets change ratios automatically
+• Torque converter replaces the manual clutch
+• Automatic Transmission Fluid (ATF) must be serviced regularly
+
+4WD SYSTEMS — ESSENTIAL FOR PNG
+• Part-time 4WD: driver engages 2H / 4H / 4L when needed
+• Full-time 4WD: centre differential always engaged
+• 4L (Low Range): maximum torque for mud, steep grades, off-road
+
+DIFFERENTIAL
+• Allows wheels to rotate at different speeds through corners
+• Open diff: standard / LSD: better traction / Locker: extreme off-road
+
+DRIVESHAFTS & CV JOINTS
+• CV joints allow steering movement and transmit power
+• Inspect rubber boots for grease leaks — prevents joint failure`,
+  quiz:[{q:"What component replaces the clutch in an automatic gearbox?",opts:["Flywheel","Torque converter","Synchromesh ring","Planetary gear"],ans:1},{q:"What does 4L mean on a transfer case selector?",opts:["4 cylinders, Low compression","4-wheel drive, Low range","4th gear, Locked","4-wheel drive, Limited"],ans:1},{q:"What is the purpose of a differential?",opts:["Change gear ratios","Allow wheels to turn at different speeds","Engage 4-wheel drive","Lubricate the gearbox"],ans:1},{q:"What should you inspect regularly on CV joints?",opts:["Oil level inside","Rubber boots for grease leaks","Belt tension","Bearing preload"],ans:1},{q:"For PNG highland tracks, which mode gives maximum torque at low speed?",opts:["2H (2WD High)","4H (4WD High)","4L (4WD Low)","Neutral"],ans:2}]}
+];
+
+const FINAL=[
+  {q:"What are the four strokes in correct order?",opts:["Power, Intake, Compression, Exhaust","Intake, Compression, Power, Exhaust","Compression, Intake, Power, Exhaust","Exhaust, Compression, Intake, Power"],ans:1},
+  {q:"Which component converts piston motion to rotation?",opts:["Camshaft","Crankshaft","Flywheel","Valve"],ans:1},
+  {q:"A clogged fuel filter most likely causes:",opts:["Engine overheating","Poor fuel delivery and loss of power","Battery drain","Brake fade"],ans:1},
+  {q:"Healthy alternator output voltage is:",opts:["9–10V","11–12V","13.8–14.4V","15–16V"],ans:2},
+  {q:"Brake fluid is hygroscopic, meaning:",opts:["It resists heat well","It absorbs moisture from air","It repels water","It thickens when hot"],ans:1},
+  {q:"Most common suspension on PNG 4WD utility vehicles:",opts:["MacPherson strut","Double wishbone","Solid axle","Air suspension"],ans:2},
+  {q:"In a carburettor, what creates vacuum to draw fuel?",opts:["Float chamber","Venturi","Throttle plate","Needle valve"],ans:1},
+  {q:"What does the alternator's rectifier do?",opts:["Regulates voltage output","Converts AC to DC","Measures current flow","Controls ignition timing"],ans:1},
+  {q:"Disc brake rotors must stay above minimum thickness to prevent:",opts:["Squealing noise only","Heat warping and brake failure","Pad wear","Caliper seizure"],ans:1},
+  {q:"A Limited Slip Differential (LSD) provides:",opts:["Better fuel economy","Improved traction when a wheel slips","Lower overall gear ratios","Reduced driveshaft vibration"],ans:1},
+  {q:"Which sensor gives closed-loop feedback to the fuel injection ECU?",opts:["Coolant temperature sensor","Oxygen (O2) sensor","MAP sensor","Throttle position sensor"],ans:1},
+  {q:"What engages the flywheel ring gear during engine starting?",opts:["Armature","Field coil","Solenoid pinion gear","Commutator"],ans:2},
+  {q:"For PNG conditions, what is critical for wheel bearing maintenance?",opts:["Replace every 10,000 km","Repack grease regularly due to water crossings","Only inspect when noisy","Use sealed bearings only"],ans:1},
+  {q:"Synchromesh in a manual gearbox:",opts:["Locks gears in place","Matches shaft speeds for smooth gear changes","Prevents reverse while moving","Reduces gear noise"],ans:1},
+  {q:"A cracked CV joint boot will cause:",opts:["Transmission fluid loss","Grease loss and eventual CV joint failure","Engine overheating","Power steering failure"],ans:1},
+  {q:"Why use 4L when driving through mud?",opts:["Better fuel economy","Maximum torque at low wheel speed","Reduce brake wear","Auto-engage diff lock"],ans:1},
+  {q:"When an engine overheats in PNG's hot climate, first check:",opts:["Fuel pressure","Coolant level and radiator condition","Battery voltage","Tyre pressure"],ans:1},
+  {q:"A worn clutch friction disc will cause:",opts:["Hard gear selection","Engine revs rise but vehicle doesn't accelerate","Brake pedal goes to floor","Steering pulls to one side"],ans:1},
+  {q:"Correct order for bleeding brakes:",opts:["Front left always first","Furthest wheel from master cylinder first","Rear axle only","Any order works"],ans:1},
+  {q:"Before returning a vehicle to the customer, a qualified mechanic must:",opts:["Ensure the vehicle looks clean","Verify all repairs are safe and roadworthy","Keep repair time to minimum","Charge the maximum possible rate"],ans:1}
+];
+
+function fmtCard(v){return v.replace(/\D/g,"").slice(0,16).replace(/(.{4})/g,"$1 ").trim();}
+function fmtExp(v){return v.replace(/\D/g,"").slice(0,4).replace(/^(.{2})/,"$1/").slice(0,5);}
+function today(){return new Date().toLocaleDateString("en-PG",{day:"numeric",month:"long",year:"numeric"});}
+
+/* ── Name Screen ── */
+function NameScreen({onStart}){
+  const [n,setN]=useState("");
+  return h("div",{className:"name-screen"},
+    h("div",{className:"name-card"},
+      h("div",{style:{fontSize:44,marginBottom:12}},"🔧"),
+      h("h1",{style:{fontSize:26,fontWeight:800,marginBottom:4,lineHeight:1.25}},INSTITUTE),
+      h("p",{style:{fontSize:13,color:"#7A7469",marginBottom:4}}),"Motor Vehicle Mechanic Trade Course",
+      h("p",{style:{fontSize:12,color:"#B0A99E",marginBottom:28}},SHORT+" — Papua New Guinea"),
+      h("label",{className:"fi-label"},"Enter your full name to begin"),
+      h("input",{className:"fi",placeholder:"e.g. John Kila",value:n,onChange:e=>setN(e.target.value),onKeyDown:e=>e.key==="Enter"&&n.trim()&&onStart(n.trim())}),
+      h("button",{className:"btn btn-orange",style:{width:"100%"},disabled:!n.trim(),onClick:()=>n.trim()&&onStart(n.trim())},"Start Course →")
+    )
+  );
+}
+
+/* ── Sidebar ── */
+function Sidebar({page,go,done,scores,student,pct,payStatus}){
+  return h("div",{className:"sidebar"},
+    h("div",{className:"sidebar-logo"},"Pacific",h("br",null),"Technical Skills",h("br",null),"Training Institute",h("div",{className:"logo-sub"},SHORT)),
+    h("button",{className:"nav-btn"+(page==="dashboard"?" active":""),onClick:()=>go("dashboard")},h("span",{className:"nav-ico"},"⊞"),"Dashboard"),
+    h("button",{className:"nav-btn"+(page==="chat"?" active":""),onClick:()=>go("chat")},h("span",{className:"nav-ico"},"💬"),"AI Tutor"),
+    h("button",{className:"nav-btn"+(page==="finaltest"?" active":""),onClick:()=>go("finaltest")},h("span",{className:"nav-ico"},"📋"),"Final Test"),
+    h("button",{className:"nav-btn"+(page==="payment"?" active":""),onClick:()=>go("payment")},
+      h("span",{className:"nav-ico"},"💳"),"Payment",
+      payStatus==="paid"?h("span",{className:"nav-badge badge-paid"},"Paid"):
+      payStatus==="pending"?h("span",{className:"nav-badge badge-pending"},"Pending"):null
+    ),
+    h("button",{className:"nav-btn"+(page==="certificate"?" active":""),onClick:()=>go("certificate")},h("span",{className:"nav-ico"},"🏆"),"Certificate"),
+    h("div",{className:"nav-section"},"Modules"),
+    ...MODULES.map(m=>h("button",{key:m.id,className:"nav-mod"+(done.has(m.id)?" done":""),onClick:()=>go("mod_"+m.id)},
+      h("span",{className:"dot"}),
+      m.title.length>17?m.title.slice(0,17)+"…":m.title,
+      done.has(m.id)?h("span",{style:{marginLeft:"auto",fontSize:11,color:"#6DCFA0"}},"✓"):
+        scores[m.id]?h("span",{style:{marginLeft:"auto",fontSize:11,color:"#E07B39"}},scores[m.id]+"%"):null
+    )),
+    h("div",{className:"progress-mini"},
+      h("div",{className:"prog-label"},student+" — "+pct+"% complete"),
+      h("div",{className:"prog-bar-wrap"},h("div",{className:"prog-bar-fill",style:{width:pct+"%"}}))
+    )
+  );
+}
+
+/* ── Dashboard ── */
+function Dashboard({done,scores,student,pct,finalPassed,payStatus,go}){
+  const avg=Object.values(scores).length?Math.round(Object.values(scores).reduce((a,b)=>a+b,0)/Object.values(scores).length):0;
+  return h("div",null,
+    h("div",{className:"page-title"},"Welcome back, "+student.split(" ")[0]+" 👋"),
+    h("div",{className:"page-sub"},"Motor Vehicle Mechanic Trade Course — "+INSTITUTE),
+    h("div",{className:"grid2",style:{marginBottom:24}},
+      h("div",{className:"stat-card"},h("div",{className:"stat-num"},done.size+"/"+MODULES.length),h("div",{className:"stat-lbl"},"Modules completed")),
+      h("div",{className:"stat-card"},h("div",{className:"stat-num"},avg?avg+"%":"—"),h("div",{className:"stat-lbl"},"Average quiz score"))
+    ),
+    h("div",{style:{marginBottom:24}},
+      h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}},
+        h("span",{style:{fontSize:14,fontWeight:500}},pct+"% of course completed"),
+        h("span",{className:"tag "+(pct>=100?"tag-green":"tag-orange")},pct>=100?"Course done":"In progress")
+      ),
+      h("div",{className:"progress-bar"},h("div",{className:"progress-fill"+(pct>=100?" green":""),style:{width:pct+"%"}}))
+    ),
+    finalPassed&&payStatus!=="paid"&&h("div",{className:"alert alert-blue",style:{display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,flexWrap:"wrap"}},
+      h("span",null,"🎉 You passed the Final Test! Pay the certification fee to unlock your certificate."),
+      h("button",{className:"btn btn-blue btn-sm",style:{whiteSpace:"nowrap"},onClick:()=>go("payment")},"Pay Now — "+CERT_FEE)
+    ),
+    payStatus==="pending"&&h("div",{className:"alert alert-orange"},"⏳ Your direct deposit receipt is under review. Certificate will be unlocked once admin confirms payment."),
+    payStatus==="paid"&&h("div",{className:"alert alert-green"},"✅ Payment confirmed! Your certificate is ready. Go to the Certificate tab."),
+    h("h3",{style:{fontSize:22,fontWeight:700,marginBottom:14}},"Course Modules"),
+    MODULES.map((m,i)=>{
+      const isDone=done.has(m.id),sc=scores[m.id],locked=i>0&&!done.has(MODULES[i-1].id);
+      return h("div",{key:m.id,className:"mod-card"+(isDone?" done":"")+(locked?" locked":""),onClick:()=>!locked&&go("mod_"+m.id)},
+        h("div",{className:"mod-ico"},m.ico),
+        h("div",{style:{flex:1}},
+          h("div",{style:{display:"flex",alignItems:"center",gap:8,marginBottom:4}},
+            h("h4",{style:{fontSize:19,fontWeight:700}},m.title),
+            isDone?h("span",{className:"tag tag-green"},"✓ Complete"):sc?h("span",{className:"tag tag-red"},"Retry"):locked?h("span",{className:"tag tag-gray"},"🔒 Locked"):h("span",{className:"tag tag-orange"},"Start")
+          ),
+          h("p",{style:{fontSize:13.5,color:"#7A7469",marginBottom:6}},m.desc),
+          h("div",{style:{display:"flex",gap:12}},
+            h("span",{style:{fontSize:12,color:"#AAA49C"}},m.dur),
+            sc&&h("span",{style:{fontSize:12,color:sc>=60?"#1E6E3F":"#C0392B"}},"Quiz: "+sc+"%")
+          )
+        ),
+        !locked&&h("div",{style:{fontSize:22,color:"#E07B39",alignSelf:"center"}},"›")
+      );
+    })
+  );
+}
+
+/* ── Module View ── */
+function ModuleView({mod,onBack,onComplete}){
+  const [tab,setTab]=useState("lesson");
+  const [ans,setAns]=useState({});
+  const [sub,setSub]=useState(false);
+  const [sc,setSc]=useState(null);
+  const passed=sc!=null&&sc>=60;
+
+  const submit=()=>{
+    let s=0;mod.quiz.forEach((q,i)=>{if(ans[i]===q.ans)s++;});
+    const p=Math.round(s/mod.quiz.length*100);setSc(p);setSub(true);setTab("quiz");
+    onComplete(mod.id,p);
+  };
+
+  return h("div",null,
+    h("button",{className:"back-btn",onClick:onBack},"‹ Back to Dashboard"),
+    h("h2",{style:{fontSize:30,fontWeight:800,marginBottom:4}},mod.ico+" "+mod.title),
+    h("p",{className:"page-sub"},mod.dur+" · "+mod.desc),
+    h("div",{className:"tab-bar"},
+      h("button",{className:"tab"+(tab==="lesson"?" active":""),onClick:()=>setTab("lesson")},"Lesson"),
+      h("button",{className:"tab"+(tab==="quiz"?" active":""),onClick:()=>setTab("quiz")},"Quiz",sc!=null?" ("+sc+"%)":"")
+    ),
+    tab==="lesson"&&h("div",null,
+      h("div",{className:"video-wrap"},h("iframe",{src:"https://www.youtube.com/embed/"+mod.vid+"?rel=0",allowFullScreen:true})),
+      h("div",{className:"lesson-content"},mod.content.split("\n").map((ln,i)=>{
+        if(!ln.trim())return h("div",{key:i,style:{height:8}});
+        if(/^[A-Z][A-Z\s&–]+$/.test(ln))return h("div",{key:i,style:{marginTop:16,fontSize:13,fontWeight:600,letterSpacing:".06em",color:"#7A7469"}},ln);
+        if(/^\d\./.test(ln))return h("div",{key:i,style:{paddingLeft:16,margin:"3px 0",fontWeight:500}},ln);
+        if(ln.startsWith("•"))return h("div",{key:i,style:{paddingLeft:16,margin:"2px 0"}},ln);
+        return h("p",{key:i,style:{margin:"4px 0"}},ln);
+      })),
+      h("div",{style:{marginTop:20,display:"flex",justifyContent:"flex-end"}},
+        h("button",{className:"btn btn-orange",onClick:()=>setTab("quiz")},"Take Module Quiz →")
+      )
+    ),
+    tab==="quiz"&&h("div",null,
+      sub&&h("div",{className:"alert "+(passed?"alert-green":"alert-red"),style:{marginBottom:20}},
+        passed?"✅ Passed! Score: "+sc+"% — Well done!":"❌ Score: "+sc+"% — Need 60% to pass. Review the lesson and try again."
+      ),
+      mod.quiz.map((q,qi)=>h("div",{key:qi,style:{marginBottom:24}},
+        h("p",{style:{fontSize:15,fontWeight:500,marginBottom:12}},`Q${qi+1}. ${q.q}`),
+        q.opts.map((opt,oi)=>{
+          let cls="quiz-opt";
+          if(!sub&&ans[qi]===oi)cls+=" sel";
+          if(sub){if(oi===q.ans)cls+=" correct";else if(ans[qi]===oi)cls+=" wrong";}
+          return h("button",{key:oi,className:cls,disabled:sub,onClick:()=>!sub&&setAns(a=>({...a,[qi]:oi}))},
+            h("span",{className:"opt-letter"},LETTERS[oi]),opt
+          );
+        })
+      )),
+      !sub&&h("div",{style:{display:"flex",justifyContent:"flex-end"}},
+        h("button",{className:"btn btn-orange",disabled:Object.keys(ans).length<mod.quiz.length,onClick:submit},"Submit Quiz")
+      ),
+      sub&&!passed&&h("div",{style:{display:"flex",justifyContent:"flex-end",marginTop:8}},
+        h("button",{className:"btn btn-ghost",onClick:()=>{setAns({});setSub(false);setSc(null);}},"Retry Quiz")
+      )
+    )
+  );
+}
+
+/* ── AI Chat ── */
+function ChatView({student}){
+  const [msgs,setMsgs]=useState([{r:"ai",t:"Apinun "+student.split(" ")[0]+"! I'm your AI Mechanic Tutor 🔧\n\nI'm here to support your studies at "+INSTITUTE+". Ask me anything about engines, fuel systems, electrics, brakes or transmission. How can I help you today?"}]);
+  const [input,setInput]=useState("");
+  const [loading,setLoading]=useState(false);
+  const endRef=useRef();
+  useEffect(()=>endRef.current?.scrollIntoView({behavior:"smooth"}),[msgs]);
+
+  const send=async()=>{
+    if(!input.trim()||loading)return;
+    const msg=input.trim();setInput("");
+    const newMsgs=[...msgs,{r:"user",t:msg}];
+    setMsgs(newMsgs);setLoading(true);
+    try{
+      const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,
+          system:"You are an expert motor vehicle mechanic tutor for "+INSTITUTE+" (PTSTI) in Papua New Guinea. Help students understand engines, fuel systems, electrical systems, brakes, suspension, and transmission. Use practical examples relevant to PNG vehicle types (Land Cruisers, Hiluxes, Corollas, PMVs). Relate advice to PNG road conditions (highland gravel roads, tropical heat and humidity, river crossings, coastal salt air). Be encouraging, practical and clear. Keep responses concise but thorough. Occasionally use Tok Pisin greetings like 'Apinun' or 'Gutpela' to connect culturally.",
+          messages:newMsgs.map(m=>({role:m.r==="ai"?"assistant":"user",content:m.t}))
+        })});
+      const d=await res.json();
+      setMsgs(p=>[...p,{r:"ai",t:d.content?.[0]?.text||"Sorry, try again."}]);
+    }catch{setMsgs(p=>[...p,{r:"ai",t:"Connection error. Please check your internet and try again."}]);}
+    setLoading(false);
+  };
+
+  return h("div",null,
+    h("div",{className:"page-title"},"AI Mechanic Tutor"),
+    h("div",{className:"page-sub"},SHORT+" — Your personal tutor, available 24/7"),
+    h("div",{className:"chat-wrap"},
+      h("div",{className:"chat-msgs"},
+        msgs.map((m,i)=>h("div",{key:i,className:m.r==="user"?"msg-user":"msg-ai"},
+          h("div",{className:m.r==="user"?"bubble-user":"bubble-ai"},m.t)
+        )),
+        loading&&h("div",{className:"msg-ai"},h("div",{className:"bubble-ai"},h("div",{className:"typing"},h("span"),h("span"),h("span")))),
+        h("div",{ref:endRef})
+      ),
+      h("div",{className:"chat-input-row"},
+        h("input",{className:"chat-input",placeholder:"Ask about engines, fuel, electrics, brakes...",value:input,
+          onChange:e=>setInput(e.target.value),onKeyDown:e=>e.key==="Enter"&&send()}),
+        h("button",{className:"btn btn-orange btn-sm",onClick:send,disabled:loading||!input.trim()},"Send")
+      )
+    )
+  );
+}
+
+/* ── Final Test ── */
+function FinalTestView({done,allDone,onScore}){
+  const [ans,setAns]=useState({});
+  const [sub,setSub]=useState(false);
+  const [sc,setSc]=useState(0);
+  const passed=sc>=70;
+
+  const submit=()=>{
+    let s=0;FINAL.forEach((q,i)=>{if(ans[i]===q.ans)s++;});
+    const p=Math.round(s/FINAL.length*100);setSc(p);onScore(p);setSub(true);
+  };
+
+  if(!allDone)return h("div",null,
+    h("div",{className:"page-title"},"Final Test"),
+    h("div",{className:"page-sub"},SHORT+" — Motor Vehicle Mechanic"),
+    h("div",{className:"alert alert-orange"},"🔒 Complete all "+MODULES.length+" modules to unlock the Final Test. Currently "+done.size+"/"+MODULES.length+" done.")
+  );
+
+  return h("div",null,
+    h("div",{className:"page-title"},"Final Test"),
+    h("div",{className:"page-sub"},"20 questions — Pass mark: 70% — Certificate issued on pass"),
+    sub&&h("div",{className:"alert "+(passed?"alert-green":"alert-red"),style:{marginBottom:24}},
+      passed?"🎉 Congratulations! You scored "+sc+"% — You've passed! Proceed to Payment to unlock your certificate.":
+        "❌ Score: "+sc+"% — Need 70% to pass. Review your modules and try again."
+    ),
+    FINAL.map((q,qi)=>h("div",{key:qi,className:"card",style:{marginBottom:12}},
+      h("p",{style:{fontSize:15,fontWeight:500,marginBottom:12}},`Q${qi+1}. ${q.q}`),
+      q.opts.map((opt,oi)=>{
+        let cls="quiz-opt";
+        if(!sub&&ans[qi]===oi)cls+=" sel";
+        if(sub){if(oi===q.ans)cls+=" correct";else if(ans[qi]===oi)cls+=" wrong";}
+        return h("button",{key:oi,className:cls,disabled:sub,onClick:()=>!sub&&setAns(a=>({...a,[qi]:oi}))},
+          h("span",{className:"opt-letter"},LETTERS[oi]),opt
+        );
+      })
+    )),
+    !sub&&h("div",{style:{display:"flex",justifyContent:"flex-end",marginTop:8}},
+      h("button",{className:"btn btn-orange",disabled:Object.keys(ans).length<FINAL.length,onClick:submit},"Submit Final Test")
+    ),
+    sub&&!passed&&h("div",{style:{display:"flex",justifyContent:"flex-end",gap:10,marginTop:8}},
+      h("button",{className:"btn btn-ghost",onClick:()=>{setAns({});setSub(false);setSc(0);}},"Retake Test")
+    )
+  );
+}
+
+/* ── Payment ── */
+function PaymentView({student,finalPassed,finalScore,payStatus,setPayStatus}){
+  const [method,setMethod]=useState(null);
+  const [cardNum,setCardNum]=useState("");
+  const [cardName,setCardName]=useState("");
+  const [expiry,setExpiry]=useState("");
+  const [cvv,setCvv]=useState("");
+  const [processing,setProcessing]=useState(false);
+  const [file,setFile]=useState(null);
+  const [submitted,setSubmitted]=useState(false);
+  const txRef="PTSTI-"+Date.now().toString().slice(-8);
+
+  const doPay=async()=>{
+    setProcessing(true);
+    await new Promise(r=>setTimeout(r,2400));
+    setProcessing(false);
+    setPayStatus("paid");
+  };
+
+  if(!finalPassed)return h("div",null,
+    h("div",{className:"page-title"},"Registration & Payment"),
+    h("div",{className:"page-sub"},SHORT+" — Certification Fee"),
+    h("div",{className:"alert alert-orange"},"🔒 Complete all modules and pass the Final Test before proceeding to payment.")
+  );
+
+  if(payStatus==="paid")return h("div",null,
+    h("div",{className:"page-title"},"Payment Confirmed"),
+    h("div",{className:"card",style:{maxWidth:520,textAlign:"center",padding:"36px 32px"}},
+      h("div",{style:{fontSize:48,marginBottom:12}},"✅"),
+      h("h3",{style:{fontSize:24,fontWeight:800,marginBottom:16}},"Payment Received"),
+      h("div",{className:"bank-box",style:{textAlign:"left"}},
+        h("div",{className:"bank-row"},h("span",{className:"bl"},"Student"),h("span",{className:"bv"},student)),
+        h("div",{className:"bank-row"},h("span",{className:"bl"},"Amount paid"),h("span",{className:"bv"},CERT_FEE)),
+        h("div",{className:"bank-row"},h("span",{className:"bl"},"Reference"),h("span",{className:"bv"},txRef)),
+        h("div",{className:"bank-row"},h("span",{className:"bl"},"Date"),h("span",{className:"bv"},today())),
+        h("div",{className:"bank-row"},h("span",{className:"bl"},"Status"),h("span",{className:"bv",style:{color:"#1E6E3F"}},"✓ Confirmed"))
+      ),
+      h("p",{style:{fontSize:14,color:"#7A7469",marginTop:14}},"Your certificate is now unlocked. Go to the Certificate tab to collect it.")
+    )
+  );
+
+  return h("div",null,
+    h("div",{className:"page-title"},"Registration & Payment"),
+    h("div",{className:"page-sub"},"Pay the certification fee to receive your Certificate of Attainment"),
+    h("div",{className:"card",style:{marginBottom:18}},
+      h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:8}},
+        h("div",null,
+          h("div",{style:{fontSize:13,color:"#7A7469",marginBottom:2}}),"Certification fee",
+          h("div",{style:{fontFamily:"'Barlow Condensed',sans-serif",fontSize:34,fontWeight:800,color:"#E07B39"}},CERT_FEE),
+          h("div",{style:{fontSize:12,color:"#AAA49C",marginTop:2}}),"Motor Vehicle Mechanic Trade Course — "+SHORT
+        ),
+        h("div",{style:{textAlign:"right"}},
+          h("div",{className:"tag tag-blue"},"Final score: "+finalScore+"%"),
+          h("div",{style:{fontSize:12,color:"#AAA49C",marginTop:6}},student)
+        )
+      )
+    ),
+    !method&&h("div",null,
+      h("h3",{style:{fontSize:20,fontWeight:700,marginBottom:14}},"Choose payment method"),
+      h("div",{className:"pay-method-row"},
+        h("div",{className:"pay-method-btn",onClick:()=>setMethod("card")},
+          h("div",{className:"pico"},"💳"),h("div",{className:"ptitle"},"Debit / Credit Card"),h("div",{className:"psub"},"Visa or Mastercard — instant approval")
+        ),
+        h("div",{className:"pay-method-btn",onClick:()=>setMethod("deposit")},
+          h("div",{className:"pico"},"🏦"),h("div",{className:"ptitle"},"Direct Deposit"),h("div",{className:"psub"},"Bank transfer + upload proof of payment")
+        )
+      )
+    ),
+    method==="card"&&!processing&&payStatus!=="paid"&&h("div",null,
+      h("button",{className:"back-btn",onClick:()=>setMethod(null)},"‹ Change method"),
+      h("h3",{style:{fontSize:20,fontWeight:700,marginBottom:16}},"Card Details"),
+      h("div",{className:"card-visual"},
+        h("div",{className:"card-chip"}),
+        h("div",{className:"card-num"},cardNum||"•••• •••• •••• ••••"),
+        h("div",{className:"card-meta"},h("span",null,cardName||"CARDHOLDER NAME"),h("span",null,expiry||"MM/YY"))
+      ),
+      h("label",{className:"fi-label"},"Card number"),
+      h("input",{className:"fi",placeholder:"0000 0000 0000 0000",value:cardNum,onChange:e=>setCardNum(fmtCard(e.target.value)),maxLength:19}),
+      h("label",{className:"fi-label"},"Cardholder name"),
+      h("input",{className:"fi",placeholder:"As shown on card",value:cardName,onChange:e=>setCardName(e.target.value.toUpperCase())}),
+      h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}},
+        h("div",null,h("label",{className:"fi-label"},"Expiry"),h("input",{className:"fi",placeholder:"MM/YY",value:expiry,onChange:e=>setExpiry(fmtExp(e.target.value)),maxLength:5})),
+        h("div",null,h("label",{className:"fi-label"},"CVV"),h("input",{className:"fi",placeholder:"•••",type:"password",value:cvv,onChange:e=>setCvv(e.target.value.replace(/\D/g,"").slice(0,4))}))
+      ),
+      h("div",{className:"alert alert-blue",style:{marginBottom:16}},"🔒 Your card details are encrypted and processed securely."),
+      h("button",{className:"btn btn-orange",style:{width:"100%"},
+        disabled:cardNum.replace(/\s/g,"").length<16||!cardName.trim()||expiry.length<5||cvv.length<3,
+        onClick:doPay},"Pay "+CERT_FEE+" →")
+    ),
+    method==="card"&&processing&&h("div",{className:"alert alert-blue"},"⏳ Processing payment, please wait…"),
+    method==="deposit"&&!submitted&&h("div",null,
+      h("button",{className:"back-btn",onClick:()=>setMethod(null)},"‹ Change method"),
+      h("h3",{style:{fontSize:20,fontWeight:700,marginBottom:14}},"Bank Direct Deposit Details"),
+      h("div",{className:"bank-box"},
+        h("div",{className:"bank-row"},h("span",{className:"bl"},"Bank"),h("span",{className:"bv"},BANK.name)),
+        h("div",{className:"bank-row"},h("span",{className:"bl"},"Account name"),h("span",{className:"bv"},INSTITUTE)),
+        h("div",{className:"bank-row"},h("span",{className:"bl"},"Account number"),h("span",{className:"bv"},BANK.acct)),
+        h("div",{className:"bank-row"},h("span",{className:"bl"},"Branch"),h("span",{className:"bv"},BANK.branch)),
+        h("div",{className:"bank-row"},h("span",{className:"bl"},"BSB / Branch code"),h("span",{className:"bv"},BANK.bsb)),
+        h("div",{className:"bank-row"},h("span",{className:"bl"},"Amount to deposit"),h("span",{className:"bv",style:{color:"#E07B39"}},CERT_FEE)),
+        h("div",{className:"bank-row"},h("span",{className:"bl"},"Payment reference"),h("span",{className:"bv"},BANK.ref))
+      ),
+      h("div",{className:"alert alert-orange",style:{marginBottom:16}},"Important: Include your full name as the payment reference so we can match your payment."),
+      h("h3",{style:{fontSize:18,fontWeight:700,marginBottom:10}},"Upload Proof of Receipt"),
+      h("div",{className:"upload-area"+(file?" has-file":"")},
+        h("input",{type:"file",accept:"image/*,application/pdf",onChange:e=>setFile(e.target.files[0])}),
+        !file&&h("div",null,
+          h("div",{style:{fontSize:30,marginBottom:8}},"📎"),
+          h("div",{style:{fontSize:14,fontWeight:500}}),"Click to upload receipt",
+          h("div",{style:{fontSize:12,color:"#7A7469",marginTop:4}}),"JPG, PNG or PDF accepted"
+        ),
+        file&&h("div",{style:{display:"flex",alignItems:"center",gap:12}},
+          h("div",{style:{fontSize:24}},file.type.includes("pdf")?"📄":"🖼️"),
+          h("div",null,h("div",{style:{fontSize:14,fontWeight:500}},file.name),h("div",{style:{fontSize:12,color:"#1E6E3F"}},Math.round(file.size/1024)+" KB — Ready to submit"))
+        )
+      ),
+      h("button",{className:"btn btn-orange",style:{width:"100%"},disabled:!file,onClick:()=>{setPayStatus("pending");setSubmitted(true);}},"Submit Receipt for Review →")
+    ),
+    method==="deposit"&&submitted&&h("div",null,
+      h("div",{className:"alert alert-orange"},"⏳ Receipt submitted! The PTSTI admin team will review your payment. Your certificate will be unlocked once confirmed."),
+      h("div",{className:"card"},
+        h("div",{style:{fontSize:13,color:"#7A7469",marginBottom:10}}),"Submission summary",
+        h("div",{className:"bank-row"},h("span",{className:"bl"},"Student"),h("span",{className:"bv"},student)),
+        h("div",{className:"bank-row"},h("span",{className:"bl"},"Receipt file"),h("span",{className:"bv"},file?.name)),
+        h("div",{className:"bank-row"},h("span",{className:"bl"},"Status"),h("span",{className:"bv",style:{color:"#C45A15"}},"Pending admin review")),
+        h("div",{className:"bank-row"},h("span",{className:"bl"},"Submitted on"),h("span",{className:"bv"},today()))
+      )
+    )
+  );
+}
+
+/* ── Certificate ── */
+function CertificateView({student,score,finalPassed,payStatus}){
+  const [lecName,setLecName]=useState("");
+  const [approved,setApproved]=useState(false);
+
+  if(!finalPassed)return h("div",null,
+    h("div",{className:"page-title"},"Certificate of Attainment"),
+    h("div",{className:"alert alert-orange"},"Complete all modules and pass the Final Test first.")
+  );
+  if(payStatus!=="paid")return h("div",null,
+    h("div",{className:"page-title"},"Certificate of Attainment"),
+    h("div",{className:"alert alert-orange"},"💳 Certification fee payment is required before the certificate can be issued. Go to the Payment tab."),
+    payStatus==="pending"&&h("div",{className:"alert alert-blue",style:{marginTop:8}},"⏳ Your direct deposit receipt is under review. Certificate will be unlocked once payment is confirmed.")
+  );
+
+  return h("div",null,
+    h("div",{className:"page-title"},"Certificate of Attainment"),
+    h("div",{className:"page-sub"},INSTITUTE+" — Lecturer approval required"),
+    h("div",{className:"card",style:{maxWidth:500,marginBottom:24}},
+      h("h3",{style:{fontSize:20,fontWeight:700,marginBottom:12}},"Lecturer Approval"),
+      h("p",{style:{fontSize:14,color:"#7A7469",marginBottom:14}},"Enter your name below to sign and issue the certificate:"),
+      h("input",{className:"fi",placeholder:"Lecturer's full name",value:lecName,onChange:e=>setLecName(e.target.value)}),
+      !approved&&h("button",{className:"btn btn-orange",disabled:!lecName.trim(),onClick:()=>setApproved(true)},"✓ Approve & Sign Certificate"),
+      approved&&h("div",{className:"alert alert-green"},"✅ Certificate signed by "+lecName),
+      approved&&h("button",{className:"btn btn-ghost btn-sm",style:{marginTop:12},onClick:()=>window.print()},"🖨️ Print Certificate")
+    ),
+    h("div",{className:"cert-wrap"},
+      h("div",{className:"cert-inner"}),
+      h("div",{className:"cert-seal"},"🏆"),
+      h("div",{style:{fontFamily:"'Barlow Condensed',sans-serif",fontSize:13,letterSpacing:".18em",textTransform:"uppercase",color:"#7A7469",marginBottom:8}},INSTITUTE.toUpperCase()),
+      h("div",{className:"cert-heading"},"Certificate of Attainment"),
+      h("div",{style:{fontSize:14,color:"#7A7469",marginBottom:6}}),"This is to certify that",
+      h("div",{className:"cert-name"},student),
+      h("div",{className:"cert-body"},
+        "has successfully completed the ",h("strong",null,"Motor Vehicle Mechanic Trade Course"),
+        " at the ",h("strong",null,INSTITUTE),
+        ",\ncovering Engine Fundamentals, Fuel Systems, Electrical Systems,\nBrakes & Suspension, and Transmission & Drivetrain.\n\n",
+        "Final Assessment Score: ",h("strong",null,score+"%"),
+        "\nDate of Issue: ",today(),
+        "\nCertification Fee: ",h("strong",null,"Paid ✓")
+      ),
+      h("div",{style:{marginTop:24}},
+        h("div",{className:"sig-line"},approved?lecName:"_____________________"),
+        h("div",{className:"sig-sub"},approved?"Lecturer — Motor Vehicle Mechanics, "+SHORT:"Awaiting lecturer signature"),
+        !approved&&h("p",{style:{fontSize:12,color:"#E07B39",marginTop:8}},"Awaiting lecturer approval above")
+      )
+    )
+  );
+}
+
+/* ── Root App ── */
+function App(){
+  const [student,setStudent]=useState("");
+  const [page,setPage]=useState("dashboard");
+  const [modId,setModId]=useState(null);
+  const [done,setDone]=useState(new Set());
+  const [scores,setScores]=useState({});
+  const [finalScore,setFinalScore]=useState(0);
+  const [finalPassed,setFinalPassed]=useState(false);
+  const [payStatus,setPayStatus]=useState(null);
+
+  if(!student)return h(NameScreen,{onStart:n=>setStudent(n)});
+
+  const pct=Math.round(done.size/MODULES.length*100);
+  const allDone=done.size===MODULES.length;
+
+  const go=p=>{
+    if(p.startsWith("mod_")){setModId(parseInt(p.slice(4)));setPage("module");}
+    else setPage(p);
+  };
+
+  let content;
+  if(page==="dashboard")content=h(Dashboard,{done,scores,student,pct,finalPassed,payStatus,go});
+  else if(page==="module"&&modId)content=h(ModuleView,{
+    mod:MODULES.find(m=>m.id===modId),
+    onBack:()=>setPage("dashboard"),
+    onComplete:(id,sc)=>{setScores(p=>({...p,[id]:sc}));if(sc>=60)setDone(p=>new Set([...p,id]));}
+  });
+  else if(page==="chat")content=h(ChatView,{student});
+  else if(page==="finaltest")content=h(FinalTestView,{done,allDone,onScore:s=>{setFinalScore(s);if(s>=70)setFinalPassed(true);}});
+  else if(page==="payment")content=h(PaymentView,{student,finalPassed,finalScore,payStatus,setPayStatus});
+  else if(page==="certificate")content=h(CertificateView,{student,score:finalScore,finalPassed,payStatus});
+
+  return h("div",{className:"app-wrap"},
+    h(Sidebar,{page,go,done,scores,student,pct,payStatus}),
+    h("main",{className:"main"},content)
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("app")).render(h(App));
+</script>
+</body>
+</html>
