@@ -350,6 +350,10 @@ function ModuleView({mod,onBack}){
 }
 
 function ChatView({student}){
+  // WARNING: Never hardcode API keys in client-side code.
+  // This value is handled server-side via process.env.ANTHROPIC_API_KEY through a monolithic proxy.
+  const ANTHROPIC_API_KEY = "";
+
   const [msgs,setMsgs]=useState([
     {r:"ai",t:"Apinun "+student.split(" ")[0]+"! I'm your AI Mechanic Tutor 🔧\n\nAsk me anything about motor vehicles — engines, fuel systems, electrics, brakes or transmission. I'm here to help you pass your PNG trade course. How can I help you today?"}
   ]);
@@ -363,7 +367,7 @@ function ChatView({student}){
     const newMsgs=[...msgs,{r:"user",t:msg}];
     setMsgs(newMsgs);setLoading(true);
     try{
-      const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
+      const res=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
         model:"claude-sonnet-4-20250514",max_tokens:1000,
         system:"You are an expert motor vehicle mechanic tutor for a trade course in Papua New Guinea. Help students understand engines, fuel systems, electrical systems, brakes, suspension, and transmission. Use practical examples from PNG vehicle types (Land Cruisers, Hiluxes, Corollas, PMVs). Relate to PNG road conditions (highland gravel roads, tropical heat and humidity, river crossings, coastal salt air). Be encouraging, practical and clear. Keep responses concise but thorough. Occasionally use Tok Pisin greetings like 'Apinun' or 'Gutpela' to connect culturally with PNG students.",
         messages:newMsgs.map(m=>({role:m.r==="ai"?"assistant":"user",content:m.t}))
